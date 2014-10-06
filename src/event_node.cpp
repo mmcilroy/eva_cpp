@@ -5,8 +5,12 @@ using namespace eva;
 
 event_node::event_node()
 {
+}
+
+void event_node::start()
+{
     _thread = boost::shared_ptr< boost::thread >(
-        new boost::thread( boost::bind( &event_node::start, this ) ) );
+        new boost::thread( boost::bind( &event_node::run, this ) ) );
 }
 
 void event_node::join()

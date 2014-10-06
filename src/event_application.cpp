@@ -13,12 +13,12 @@ event_application& event_application::instance()
     return *_instance;
 }
 
-event_queue* event_application::make_queue( const std::string& name )
+event_queue* event_application::make_queue( const std::string& name, event_queue_options opt )
 {
     if( _queues.find( name ) != _queues.end() ) {
         eva_exception( "queue [" << name << "] already exists" );
     }
-    return ( _queues[name] = new event_queue );
+    return ( _queues[name] = new event_queue( opt ) );
 }
 
 event_queue* event_application::find_queue( const std::string& name )

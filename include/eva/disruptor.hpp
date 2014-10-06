@@ -16,7 +16,9 @@ public:
     inline value get() const;
 
 private:
+    char _pad0[28];
     value _val;
+    char _pad1[28];
 };
 
 template< class T >

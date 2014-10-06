@@ -10,10 +10,11 @@ class event_node
 {
 public:
     event_node();
+    void start();
     void join();
-    virtual void start() = 0;
 
 protected:
+    virtual void run() = 0;
     event_subscriber* subscribe( const std::string& );
     event_publisher* publish( const std::string& );
 

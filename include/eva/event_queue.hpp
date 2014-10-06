@@ -5,6 +5,9 @@
 
 namespace eva {
 
+class event_journal_thread;
+class event_replicate_thread;
+
 typedef ring_buffer< event > event_ring_buffer;
 typedef reader< event > event_subscriber;
 typedef writer< event > event_publisher;
@@ -25,12 +28,12 @@ public:
 
 private:
     event_ring_buffer _events;
-    //event_reader* _journal_reader;
-    //event_reader* _replicate_reader;
-    event_subscriber* _subscriber;
     event_publisher* _publisher;
-    //journal_thread* _journal;
-    //replicate_thread* _replicate;
+    event_subscriber* _subscriber;
+    event_subscriber* _journal_subscriber;
+    event_subscriber* _replicate_subscriber;
+    event_journal_thread* _journal_thread;
+    event_replicate_thread* _replicate_thread;
 
 };
 
