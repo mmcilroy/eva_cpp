@@ -12,3 +12,9 @@ target_link_libraries( test_application1 eva pthread boost_system boost_thread )
 
 add_executable( test_application2 test_application2.cpp )
 target_link_libraries( test_application2 eva pthread boost_system boost_thread )
+
+add_executable( test_event_server test_event_server.cpp )
+target_link_libraries( test_event_server eva pthread boost_system boost_thread )
+
+add_executable( test_event_client test_event_client.cpp )
+target_link_libraries( test_event_client eva pthread boost_system boost_thread )

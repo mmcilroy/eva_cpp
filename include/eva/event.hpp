@@ -8,6 +8,7 @@ struct event_header
 {
     int _id;
     int _type;
+    int _source;
     int _length;
     bool _recovery;
 };
@@ -32,4 +33,10 @@ private:
 
 #include "event.inl"
 
+}
+
+inline std::ostream& operator<<( std::ostream& o, const eva::event_header& eh )
+{
+    o << "event_header: id=" << eh._id << ", type=" << eh._type << ", length=" << eh._length;
+    return o;
 }

@@ -29,8 +29,8 @@ inline log& logger::get( const std::string& id )
     }
 }
 
-inline logger::logger()
-: _default_log( log::INFO )
+inline logger::logger() :
+    _default_log( log::INFO )
 {
     atexit( logger_cleanup );
 }

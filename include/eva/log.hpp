@@ -8,9 +8,9 @@
 
 namespace eva {
 
-#define LOG_DEBUG( l, m ) { std::stringstream __ss; __ss << std::endl << "DBG " << ::filename( __FILE__ ) << ":" << __LINE__ << " - " << m << std::endl; l.write( ::log::DEBUG, __ss.str() ); }
-#define LOG_INFO( l, m )  { std::stringstream __ss; __ss << std::endl << "INF " << ::filename( __FILE__ ) << ":" << __LINE__ << " - " << m << std::endl; l.write( ::log::INFO, __ss.str() );  }
-#define LOG_ERROR( l, m ) { std::stringstream __ss; __ss << std::endl << "ERR " << ::filename( __FILE__ ) << ":" << __LINE__ << " - " << m << std::endl; l.write( ::log::ERROR, __ss.str() ); }
+#define LOG_DEBUG( l, m ) { std::stringstream __ss; __ss << std::endl << "DBG " << eva::filename( __FILE__ ) << ":" << __LINE__ << " - " << m << std::endl; l.write( eva::log::DEBUG, __ss.str() ); }
+#define LOG_INFO( l, m )  { std::stringstream __ss; __ss << std::endl << "INF " << eva::filename( __FILE__ ) << ":" << __LINE__ << " - " << m << std::endl; l.write( eva::log::INFO, __ss.str() );  }
+#define LOG_ERROR( l, m ) { std::stringstream __ss; __ss << std::endl << "ERR " << eva::filename( __FILE__ ) << ":" << __LINE__ << " - " << m << std::endl; l.write( eva::log::ERROR, __ss.str() ); }
 
 void logger_cleanup();
 
@@ -46,6 +46,6 @@ private:
     static logger* _instance;
 };
 
-#include "log.inl"
+#include "eva/log.inl"
 
 }

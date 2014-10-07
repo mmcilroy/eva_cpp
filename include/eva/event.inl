@@ -34,9 +34,3 @@ inline const body_type& event::get_body() const
 {
     return *(body_type*)( _buffer + sizeof( event_header ) );
 };
-
-inline std::ostream& operator<<( std::ostream& o, const event_header& eh )
-{
-    o << "event_header: id=" << eh._id << ", type=" << eh._type << ", length=" << eh._length;
-    return o;
-}
