@@ -1,7 +1,6 @@
 eva_cpp
 =======
 
-while true; do
-make
-sleep 1
-done
+A framework for writing <h3>ev</h3>ent driven <h3>a</h3>pplications
+
+while true; do make; sleep 5; done
