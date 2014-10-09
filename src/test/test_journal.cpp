@@ -28,33 +28,23 @@ int main()
     {
         eva::event_journal j( "test.event", false );
         j.recover( *p );
-        std::cout << s->next().get_header()._id << std::endl;
-        std::cout << s->next().get_header()._id << std::endl;
-        std::cout << s->next().get_header()._id << std::endl;
-        //assert( s->next().get_header()._id == 111111 );
-        //assert( s->next().get_header()._id == 222222 );
-        //assert( s->next().get_header()._id == 222222 );
+        assert( s->next().get_header()._id == 111111 );
+        assert( s->next().get_header()._id == 222222 );
+        assert( s->next().get_header()._id == 333333 );
         write( j, 444444 );
         write( j, 555555 );
         write( j, 666666 );
+
     }
 
     {
         eva::event_journal j( "test.event", false );
         j.recover( *p );
-        std::cout << s->next().get_header()._id << std::endl;
-        std::cout << s->next().get_header()._id << std::endl;
-        std::cout << s->next().get_header()._id << std::endl;
-        std::cout << s->next().get_header()._id << std::endl;
-        std::cout << s->next().get_header()._id << std::endl;
-        std::cout << s->next().get_header()._id << std::endl;
-        /*
         assert( s->next().get_header()._id == 111111 );
         assert( s->next().get_header()._id == 222222 );
-        assert( s->next().get_header()._id == 222222 );
+        assert( s->next().get_header()._id == 333333 );
         assert( s->next().get_header()._id == 444444 );
         assert( s->next().get_header()._id == 555555 );
         assert( s->next().get_header()._id == 666666 );
-        */
     }
 }

@@ -26,6 +26,7 @@ class event_io_session : public boost::enable_shared_from_this< event_io_session
 {
 public:
     event_io_session( const event_io_callback_ptr& callback, int id, boost::asio::io_service& io );
+    ~event_io_session();
     void write( const event& e );
     void write_complete( const boost::system::error_code& error );
     void read();

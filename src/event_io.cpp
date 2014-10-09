@@ -14,7 +14,12 @@ event_io_session::event_io_session( const event_io_callback_ptr& callback, int i
     _id( id ),
     _socket( io )
 {
-    LOG_DEBUG( l, "new event_io_session @ " << this );
+    LOG_DEBUG( l, "new event_io_session @ " << this << " id=" << _id );
+}
+
+event_io_session::~event_io_session()
+{
+    LOG_DEBUG( l, "del event_io_session @ " << this << " id=" << _id );
 }
 
 void event_io_session::write( const event& e )
@@ -39,9 +44,8 @@ void event_io_session::write_complete( const boost::system::error_code& error )
 
 void event_io_session::read()
 {
-    LOG_DEBUG( l, "event_io_session @ " << this << " read" );
+    LOG_DEBUG( l, "event_io_session @ " << this << " read, id=" << _id );
     event& e = _callback->alloc_event();
-    e.get_header()._source = _id;
     boost::asio::async_read(
         _socket,
         boost::asio::buffer( (char*)&e.get_header(), sizeof( event_header ) ),
@@ -82,9 +86,13 @@ void event_io_session::read_body( event* e )
 void event_io_session::read_body_complete( event* e, size_t len, const boost::system::error_code& error )
 {
     LOG_DEBUG( l, "event_io_session @ " << this << " read_body_complete " << len << " bytes" );
-    if( !error && len ) {
+    if( !error && len )
+    {
+        e->get_header()._source = _id;
         _callback->on_event( *this, *e );
-    } else {
+    }
+    else
+    {
         stop();
     }
 }
@@ -136,8 +144,13 @@ void event_io_controller::accept_complete( tcp::acceptor* acceptor, event_io_ses
 
 void event_io_controller::write( const event& e )
 {
-    event_io_session_ptr sess = _sessions[ e.get_header()._source ].lock();
-    sess->write( e );
+    int source = e.get_header()._source;
+    event_io_session_ptr sess = _sessions[source].lock();
+    if( sess ) {
+        sess->write( e );
+    } else {
+        LOG_DEBUG( l, "session " << source << " is no more" )
+    }
 }
 
 void event_io_controller::run()

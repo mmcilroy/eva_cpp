@@ -37,6 +37,10 @@ private:
 
 inline std::ostream& operator<<( std::ostream& o, const eva::event_header& eh )
 {
-    o << "event_header: id=" << eh._id << ", type=" << eh._type << ", length=" << eh._length;
+    o << "event_header: id=" << eh._id
+      << ", type=" << eh._type
+      << ", length=" << eh._length
+      << ", source=" << eh._source
+      << ", recovery=" << eh._recovery;
     return o;
 }

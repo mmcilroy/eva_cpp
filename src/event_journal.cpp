@@ -12,7 +12,11 @@ event_journal::event_journal( const char* filename, bool truncate ) :
     _filename( filename )
 {
     // create file if it does not exist
-    std::ofstream( filename, std::ofstream::binary | ( truncate ? std::ofstream::trunc : std::ofstream::app ) );
+    if( truncate ) {
+        std::ofstream( filename, std::ofstream::binary | std::ofstream::trunc );
+    } else {
+        std::ofstream( filename, std::ofstream::binary | std::ofstream::app );
+    }
 
     // open file for binary rw operations
     _file.open( filename, std::fstream::in | std::fstream::out | std::fstream::binary );
@@ -24,6 +28,7 @@ event_journal::event_journal( const char* filename, bool truncate ) :
 void event_journal::write( const event& e )
 {
     LOG_DEBUG( l, "journal " << e.get_length() << " bytes" );
+    _file.seekp( 0, std::ios_base::end );
     _file.write( (char*)&e.get_header(), e.get_length() );
     if( !_file.good() ) {
         eva_exception( "failed to write to journal" );
@@ -41,7 +46,7 @@ void event_journal::flush()
 void event_journal::recover( event_publisher& p )
 {
     event_journal file( _filename.c_str(), false );
-
+    file._file.seekg( 0 );
     while( file._file.good() )
     {
         event &e = p.next();
