@@ -12,6 +12,7 @@ public:
 
     event_queue* make_queue( const std::string&, event_queue_options opt=NONE );
     event_queue* find_queue( const std::string& );
+    void recover_queue( const std::string& from, event_publisher& pub );
 
 private:
     event_application();

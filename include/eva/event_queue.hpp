@@ -25,6 +25,7 @@ public:
     event_queue( event_queue_options opt=NONE );
     event_subscriber* subscriber();
     event_publisher* publisher();
+    void recover( event_publisher& );
 
 private:
     event_ring_buffer _events;

@@ -5,7 +5,9 @@
 using namespace eva;
 using boost::asio::ip::tcp;
 
-eva::log& l = eva::logger::instance().get( "event_io" );
+namespace {
+    eva::log& l = eva::logger::instance().get( "event_io" );
+}
 
 event_io_session::event_io_session( const event_io_callback_ptr& callback, int id, boost::asio::io_service& io ) :
     _callback( callback ),

@@ -2,6 +2,7 @@
 
 #include "eva/event_node.hpp"
 #include "eva/event_queue.hpp"
+#include "eva/event_io.hpp"
 
 namespace eva {
 
@@ -15,6 +16,7 @@ protected:
 
 private:
     event_subscriber* _subscriber;
+    event_io_controller _ioc;
 };
 
 }

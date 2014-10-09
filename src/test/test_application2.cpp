@@ -7,6 +7,7 @@ const int N = 10*1024*1024;
 struct my_source : public eva::event_node
 {
     my_source( const std::string& name ) :
+        event_node( "my_source" ),
         _out( publish( name ) )
     {
     }
@@ -27,6 +28,7 @@ struct my_source : public eva::event_node
 struct my_processor : public eva::event_node
 {
     my_processor() :
+        event_node( "my_processor" ),
         _inp0( subscribe( "source0" ) ),
         _inp1( subscribe( "source1" ) ),
         _inp2( subscribe( "source2" ) ),
@@ -62,6 +64,7 @@ struct my_processor : public eva::event_node
 struct my_sink : public eva::event_node
 {
     my_sink() :
+        event_node( "my_sink" ),
         _inp( subscribe( "sink0" ) )
     {
     }

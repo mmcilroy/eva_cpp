@@ -54,3 +54,10 @@ event_publisher* event_queue::publisher()
 {
     return _publisher;
 }
+
+void event_queue::recover( event_publisher& pub )
+{
+    if( _journal_thread ) {
+        _journal_thread->recover( pub );
+    }
+}

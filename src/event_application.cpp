@@ -29,6 +29,11 @@ event_queue* event_application::find_queue( const std::string& name )
     return _queues[name];
 }
 
+void event_application::recover_queue( const std::string& from, event_publisher& pub )
+{
+    find_queue( from )->recover( pub );
+}
+
 event_application::event_application()
 {
 }

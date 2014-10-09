@@ -18,12 +18,14 @@ public:
 private:
     bool read_bytes( char* buf, size_t len );
     std::fstream _file;
+    std::string _filename;
 };
 
 class event_journal_thread : public event_node
 {
 public:
     event_journal_thread( event_subscriber& );
+    void recover( event_publisher& );
 
 protected:
     virtual void run();
