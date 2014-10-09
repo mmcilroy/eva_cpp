@@ -37,3 +37,10 @@ void event_application::recover_queue( const std::string& from, event_publisher&
 event_application::event_application()
 {
 }
+
+namespace eva {
+event_application& app()
+{
+    return event_application::instance();
+}
+}

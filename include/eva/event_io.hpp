@@ -27,6 +27,7 @@ class event_io_session : public boost::enable_shared_from_this< event_io_session
 public:
     event_io_session( const event_io_callback_ptr& callback, int id, boost::asio::io_service& io );
     ~event_io_session();
+
     void write( const event& e );
     void write_complete( const boost::system::error_code& error );
     void read();
@@ -47,6 +48,7 @@ class event_io_controller
 {
 public:
     event_io_session_ptr connect( const char* host, int port, const event_io_callback_ptr& callback );
+
     void accept( int port, const event_io_callback_ptr& callback );
     void accept( tcp::acceptor* acceptor, const event_io_callback_ptr& callback );
     void accept_complete( tcp::acceptor* acceptor, event_io_session_ptr session, const boost::system::error_code& error );

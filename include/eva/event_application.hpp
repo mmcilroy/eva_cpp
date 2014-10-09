@@ -23,4 +23,6 @@ private:
     static event_application* _instance;
 };
 
+event_application& app();
+
 }
