@@ -1,5 +1,4 @@
-add_library( eva SHARED event_application.cpp event_node.cpp event_queue.cpp event_journal.cpp event_replicate.cpp event_io.cpp event_acceptor.cpp stopwatch.cpp log.cpp )
+add_library( eva SHARED journal.cpp log.cpp queue.cpp replicate.cpp source.cpp stopwatch.cpp tcp.cpp tcp_acceptor.cpp thread.cpp )
 target_link_libraries( eva )
 install( TARGETS eva DESTINATION lib )
-
 add_subdirectory( test )

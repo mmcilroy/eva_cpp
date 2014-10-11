@@ -1,10 +1,10 @@
-#include "eva/event_queue.hpp"
-#include <assert.h>
+#include "eva/queue.hpp"
+#include <cassert>
 #include <iostream>
 
-eva::event_queue queue;
-eva::event_publisher* pub = queue.publisher();
-eva::event_subscriber* sub = queue.subscriber();
+eva::queue queue;
+eva::publisher* pub = queue.publisher();
+eva::subscriber* sub = queue.subscriber();
 
 void publish( int id )
 {

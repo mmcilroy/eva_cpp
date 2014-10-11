@@ -1,12 +1,3 @@
-add_executable( test_event_queue1 test_event_queue1.cpp )
-target_link_libraries( test_event_queue1 eva pthread boost_system boost_thread )
-
-add_executable( test_event_queue2 test_event_queue2.cpp )
-target_link_libraries( test_event_queue2 eva pthread boost_system boost_thread )
-
-add_executable( test_idle_load test_idle_load.cpp )
-target_link_libraries( test_idle_load eva pthread boost_system boost_thread )
-
 add_executable( test_application1 test_application1.cpp )
 target_link_libraries( test_application1 eva pthread boost_system boost_thread )
 
@@ -21,3 +12,9 @@ target_link_libraries( test_event_client eva pthread boost_system boost_thread )
 
 add_executable( test_journal test_journal.cpp )
 target_link_libraries( test_journal eva pthread boost_system boost_thread )
+
+add_executable( test_event_queue1 test_event_queue1.cpp )
+target_link_libraries( test_event_queue1 eva pthread boost_system boost_thread )
+
+add_executable( test_idle_load test_idle_load.cpp )
+target_link_libraries( test_idle_load eva pthread boost_system boost_thread )

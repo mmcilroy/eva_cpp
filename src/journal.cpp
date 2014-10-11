@@ -1,14 +1,14 @@
-#include "eva/event_journal.hpp"
+#include "eva/journal.hpp"
 #include "eva/eva.hpp"
 #include "eva/log.hpp"
 
 using namespace eva;
 
 namespace {
-    eva::log& l = eva::logger::instance().get( "event_replicate" );
+    eva::log& l = eva::logger::instance().get( "journal" );
 }
 
-event_journal::event_journal( const char* filename, bool truncate ) :
+journal::journal( const char* filename, bool truncate ) :
     _filename( filename )
 {
     // create file if it does not exist
@@ -25,7 +25,7 @@ event_journal::event_journal( const char* filename, bool truncate ) :
     }
 }
 
-void event_journal::write( const event& e )
+void journal::write( const event& e )
 {
     LOG_DEBUG( l, "journal " << e.get_length() << " bytes" );
     _file.seekp( 0, std::ios_base::end );
@@ -35,7 +35,7 @@ void event_journal::write( const event& e )
     }
 }
 
-void event_journal::flush()
+void journal::flush()
 {
     _file.flush();
     if( !_file.good() ) {
@@ -43,9 +43,9 @@ void event_journal::flush()
     }
 }
 
-void event_journal::recover( event_publisher& p )
+void journal::recover( publisher& p )
 {
-    event_journal file( _filename.c_str(), false );
+    journal file( _filename.c_str(), false );
     file._file.seekg( 0 );
     while( file._file.good() )
     {
@@ -59,34 +59,30 @@ void event_journal::recover( event_publisher& p )
     }
 }
 
-bool event_journal::read_bytes( char* buf, size_t len )
+bool journal::read_bytes( char* buf, size_t len )
 {
     _file.read( buf, len );
     return ( _file.good() && _file.gcount() == len );
 }
 
-event_journal_thread::event_journal_thread( event_subscriber& s ) :
-    event_node( "journal" ),
+journal_thread::journal_thread( subscriber& s ) :
     _subscriber( &s ),
     _journal( "journal.events", false )
 {
 }
 
-void event_journal_thread::recover( event_publisher& pub )
+void journal_thread::recover( publisher& pub )
 {
     _journal.recover( pub );
 }
 
-void event_journal_thread::run()
+void journal_thread::loop()
 {
-    while( 1 )
+    const event& e = _subscriber->next();
+    if( !e.get_header()._recovery )
     {
-        const event& e = _subscriber->next();
-        if( !e.get_header()._recovery )
-        {
-            LOG_INFO( l, "journal: " << e.get_header() );
-            _journal.write( e );
-            _journal.flush();
-        }
+        LOG_INFO( l, "journal: " << e.get_header() );
+        _journal.write( e );
+        _journal.flush();
     }
 }

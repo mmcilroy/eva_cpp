@@ -1,38 +1,32 @@
-#include "eva/event_application.hpp"
-#include "eva/event_node.hpp"
+#include "eva/source.hpp"
 #include "eva/stopwatch.hpp"
 
-const int N = 10*1024*1024;
+const int N = 1024*1024;
 
-struct my_source : public eva::event_node
+struct test_source : public eva::source
 {
-    my_source( const std::string& name ) :
-        event_node( "my_source" ),
-        _out( publish( name ) )
+    test_source( eva::queue& queue ) :
+        eva::source( queue )
     {
-    }
+}
 
     virtual void run()
     {
         for( int i=0; i<N; i++ )
         {
-            eva::event& e = _out->next();
-            e.get_header()._id = i;
-            _out->commit();
+            next().get_header()._id = i;
+            commit();
         }
     }
-
-    eva::event_publisher* _out;
 };
 
-struct my_processor : public eva::event_node
+struct test_processor : public eva::source
 {
-    my_processor() :
-        event_node( "my_processor" ),
-        _inp0( subscribe( "source0" ) ),
-        _inp1( subscribe( "source1" ) ),
-        _inp2( subscribe( "source2" ) ),
-        _out( publish( "sink0" ) )
+    test_processor( eva::queue& inp0, eva::queue& inp1, eva::queue& inp2, eva::queue& out0 ) :
+         eva::source( out0 ),
+        _inp0( inp0.subscriber() ),
+        _inp1( inp1.subscriber() ),
+        _inp2( inp2.subscriber() )
     {
     }
 
@@ -40,6 +34,7 @@ struct my_processor : public eva::event_node
     {
         for( int i=0; i<N; i++ )
         {
+            // check input events
             const eva::event& e0 = _inp0->next();
             assert( e0.get_header()._id == i );
 
@@ -49,23 +44,21 @@ struct my_processor : public eva::event_node
             const eva::event& e2 = _inp2->next();
             assert( e0.get_header()._id == i );
 
-            eva::event& e = _out->next();
-            e.get_header()._id = i;
-            _out->commit();
+            // produce output event
+            next().get_header()._id = i;
+            commit();
         }
     }
 
-    eva::event_subscriber* _inp0;
-    eva::event_subscriber* _inp1;
-    eva::event_subscriber* _inp2;
-    eva::event_publisher* _out;
+    eva::subscriber* _inp0;
+    eva::subscriber* _inp1;
+    eva::subscriber* _inp2;
 };
 
-struct my_sink : public eva::event_node
+struct test_sink : public eva::thread
 {
-    my_sink() :
-        event_node( "my_sink" ),
-        _inp( subscribe( "sink0" ) )
+    test_sink( eva::queue& queue ) :
+        _inp( queue.subscriber() )
     {
     }
 
@@ -78,25 +71,24 @@ struct my_sink : public eva::event_node
         }
     }
 
-    eva::event_subscriber* _inp;
+    eva::subscriber* _inp;
 };
 
 int main()
 {
-    eva::event_application::instance().make_queue( "source0" );
-    eva::event_application::instance().make_queue( "source1" );
-    eva::event_application::instance().make_queue( "source2" );
-    eva::event_application::instance().make_queue( "sink0" );
-
-    my_source source0( "source0" );
-    my_source source1( "source1" );
-    my_source source2( "source2" );
-    my_processor processor;
-    my_sink sink;
-
     eva::stopwatch watch;
-    watch.start();
+    eva::queue* queue0 = new eva::queue();
+    eva::queue* queue1 = new eva::queue();
+    eva::queue* queue2 = new eva::queue();
+    eva::queue* queue3 = new eva::queue();
 
+    test_source source0( *queue0 );
+    test_source source1( *queue1 );
+    test_source source2( *queue2 );
+    test_processor processor( *queue0, *queue1, *queue2, *queue3 );
+    test_sink sink( *queue3 );
+
+    watch.start();
     sink.start();
     processor.start();
     source0.start();

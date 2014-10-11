@@ -1,12 +1,12 @@
-#include "eva/event_journal.hpp"
-#include "eva/log.hpp"
 #include "test_event.hpp"
+#include "eva/journal.hpp"
+#include "eva/log.hpp"
 
-eva::event_queue q;
-eva::event_publisher* p = q.publisher();
-eva::event_subscriber* s = q.subscriber();
+eva::queue q;
+eva::publisher* p = q.publisher();
+eva::subscriber* s = q.subscriber();
 
-void write( eva::event_journal& j, int i )
+void write( eva::journal& j, int i )
 {
     eva::event e;
     write_event_payload( e, i );
@@ -19,14 +19,14 @@ int main()
     eva::logger::instance().get( "all" ).set_level( eva::log::DEBUG );
 
     {
-        eva::event_journal j( "test.event", true );
+        eva::journal j( "test.event", true );
         write( j, 111111 );
         write( j, 222222 );
         write( j, 333333 );
     }
 
     {
-        eva::event_journal j( "test.event", false );
+        eva::journal j( "test.event", false );
         j.recover( *p );
         assert( s->next().get_header()._id == 111111 );
         assert( s->next().get_header()._id == 222222 );
@@ -38,7 +38,7 @@ int main()
     }
 
     {
-        eva::event_journal j( "test.event", false );
+        eva::journal j( "test.event", false );
         j.recover( *p );
         assert( s->next().get_header()._id == 111111 );
         assert( s->next().get_header()._id == 222222 );

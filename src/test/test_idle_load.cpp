@@ -1,8 +1,8 @@
-#include "eva/event_queue.hpp"
+#include "eva/queue.hpp"
 
 int main()
 {
-    eva::event_queue queue;
+    eva::queue queue;
     while( 1 ) {
         const eva::event& e = queue.subscriber()->next();
     }

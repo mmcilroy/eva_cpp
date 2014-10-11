@@ -1,14 +1,12 @@
-#include "eva/event_application.hpp"
-#include "eva/event_node.hpp"
+#include "eva/source.hpp"
 #include "eva/stopwatch.hpp"
 
 const int N = 10*1024*1024;
 
-struct my_source : public eva::event_node
+struct test_source : public eva::source
 {
-    my_source( const std::string& name ) :
-        event_node( "my_source" ),
-        _out( publish( name ) )
+    test_source( eva::queue& queue ) :
+        eva::source( queue )
     {
     }
 
@@ -16,20 +14,16 @@ struct my_source : public eva::event_node
     {
         for( int i=0; i<N; i++ )
         {
-            eva::event& e = _out->next();
-            e.get_header()._id = i;
-            _out->commit();
+            next().get_header()._id = i;
+            commit();
         }
     }
-
-    eva::event_publisher* _out;
 };
 
-struct my_sink : public eva::event_node
+struct test_sink : public eva::thread
 {
-    my_sink() :
-        event_node( "my_sink" ),
-        _inp( subscribe( "sink0" ) )
+    test_sink( eva::queue& queue ) :
+        _inp( queue.subscriber() )
     {
     }
 
@@ -42,23 +36,20 @@ struct my_sink : public eva::event_node
         }
     }
 
-    eva::event_subscriber* _inp;
+    eva::subscriber* _inp;
 };
 
 int main()
 {
-    eva::event_application::instance().make_queue( "sink0" );
-
-    my_source source0( "sink0" );
-    my_sink sink;
-
     eva::stopwatch watch;
+    eva::queue* queue0 = new eva::queue();
+    test_source source0( *queue0 );
+    test_sink sink0( *queue0 );
+
     watch.start();
-
-    sink.start();
+    sink0.start();
     source0.start();
-
-    sink.join();
+    sink0.join();
     source0.join();
 
     std::cout << N << " events in " << watch.elapsed_ms() << " ms. " << (int)( N / watch.elapsed_s() ) << " per sec" << std::endl;

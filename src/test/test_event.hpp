@@ -1,5 +1,10 @@
 #pragma once
 
+#include "eva/event.hpp"
+#include <cstring>
+#include <iostream>
+#include <sstream>
+
 struct event_payload
 {
     char _data[16];
