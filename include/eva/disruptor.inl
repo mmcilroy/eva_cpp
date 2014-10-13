@@ -1,7 +1,7 @@
 inline void wait()
 {
-    //usleep( 20000 ); 
-    pthread_yield();
+    usleep( 20000 ); 
+    //pthread_yield();
 }
 
 inline sequence::sequence() :

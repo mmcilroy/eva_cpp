@@ -17,6 +17,7 @@ protected:
     virtual void run();
 
 private:
+    eva::queue* _queue;
     tcp_controller _tcp;
 };
 

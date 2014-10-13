@@ -10,7 +10,8 @@ class source : public thread
 public:
     source( queue& );
 
-    event& next();
+    eva::publisher& publisher();
+    eva::event& next();
     void commit();
 
 protected:
@@ -18,8 +19,8 @@ protected:
     virtual void loop();
 
 private:
-    queue* _queue;
-    publisher* _out;
+    eva::queue* _queue;
+    eva::publisher* _out;
 };
 
 }

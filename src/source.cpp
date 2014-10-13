@@ -8,6 +8,11 @@ source::source( queue& queue ) :
 {
 }
 
+eva::publisher& source::publisher()
+{
+    return *_out;
+}
+
 event& source::next()
 {
     return _out->next();
