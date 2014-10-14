@@ -108,17 +108,31 @@ void tcp_session::stop()
 
 tcp_session_ptr tcp_controller::connect( const char* host, int port, const tcp_callback_ptr& callback )
 {
+    LOG_DEBUG( l, "connect: host=" << host << ", port=" << port );
     tcp_session_ptr sess = make_session( callback );
+
+    /*
     boost::system::error_code ec;
     boost::asio::ip::tcp::endpoint endpoint( boost::asio::ip::address::from_string( host ), port );
-    sess->_socket.connect( endpoint, ec );
+    */
+
+    std::stringstream ss; ss << port;
+    tcp::resolver resolver( _io );
+    tcp::resolver::iterator it = resolver.resolve( tcp::resolver::query( host, ss.str() ) );
+    boost::asio::connect( sess->_socket, it );
     sess->_callback->on_open( *sess.get() );
     return sess;
 }
 
 void tcp_controller::accept( int port, const tcp_callback_ptr& callback )
 {
-    accept( new tcp::acceptor( _io, tcp::endpoint( tcp::v4(), port ) ), callback );
+    std::stringstream ss; ss << port;
+    boost::asio::ip::tcp::resolver resolver( _io );
+    boost::asio::ip::tcp::resolver::query query( "0.0.0.0", ss.str() );
+    boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve( query );
+    accept( new tcp::acceptor( _io, endpoint ), callback );
+
+    //accept( new tcp::acceptor( _io, tcp::endpoint( tcp::v4( "0.0.0.0" ), port ) ), callback );
 }
 
 void tcp_controller::accept( tcp::acceptor* acceptor, const tcp_callback_ptr& callback )

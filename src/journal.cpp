@@ -45,6 +45,8 @@ void journal::flush()
 
 void journal::recover( publisher& p )
 {
+    LOG_DEBUG( l, "recovering from " << _filename );
+
     journal file( _filename.c_str(), false );
     file._file.seekg( 0 );
     while( file._file.good() )
@@ -55,6 +57,7 @@ void journal::recover( publisher& p )
             break;
         }
         e.get_header()._recovery = true;
+        LOG_DEBUG( l, "recovered " << e.get_header() );
         p.commit();
     }
 }

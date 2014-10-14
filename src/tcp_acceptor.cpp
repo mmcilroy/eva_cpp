@@ -29,7 +29,8 @@ struct acceptor_callback : public eva::tcp_callback
     eva::publisher* _out;
 };
 
-tcp_acceptor::tcp_acceptor( int port, queue& queue )
+tcp_acceptor::tcp_acceptor( int port, queue& queue ) :
+    _queue( &queue )
 {
     _tcp.accept( port, tcp_callback_ptr(
         new acceptor_callback( queue.publisher() ) ) );
@@ -42,5 +43,6 @@ void tcp_acceptor::write( const event& e )
 
 void tcp_acceptor::run()
 {
+    _queue->recover();
     _tcp.run();
 }
