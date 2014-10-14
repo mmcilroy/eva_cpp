@@ -118,7 +118,13 @@ tcp_session_ptr tcp_controller::connect( const char* host, int port, const tcp_c
 
 void tcp_controller::accept( int port, const tcp_callback_ptr& callback )
 {
-    accept( new tcp::acceptor( _io, tcp::endpoint( tcp::v4(), port ) ), callback );
+    std::stringstream ss; ss << port;
+    boost::asio::ip::tcp::resolver resolver( _io );
+    boost::asio::ip::tcp::resolver::query query( "0.0.0.0", ss.str() );
+    boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve( query );
+    accept( new tcp::acceptor( _io, endpoint ), callback );
+
+    //accept( new tcp::acceptor( _io, tcp::endpoint( tcp::v4( "0.0.0.0" ), port ) ), callback );
 }
 
 void tcp_controller::accept( tcp::acceptor* acceptor, const tcp_callback_ptr& callback )
