@@ -1,3 +1,13 @@
+inline char* event::get_raw()
+{
+    return _buffer;
+}
+
+inline const char* event::get_raw() const
+{
+    return _buffer;
+}
+
 inline size_t event::get_length() const
 {
     return sizeof( event_header ) + get_header()._length;
@@ -20,7 +30,7 @@ inline char* event::get_body_buf()
 
 inline const char* event::get_body_buf() const
 {
-    return get_body_buf();
+    return _buffer + sizeof( event_header );
 };
 
 template< class body_type >

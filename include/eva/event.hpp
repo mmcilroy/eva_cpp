@@ -16,6 +16,11 @@ struct event_header
 class event
 {
 public:
+    enum{ size = 256 };
+
+    char* get_raw();
+    const char* get_raw() const;
+
     size_t get_length() const;
 
     event_header& get_header();
@@ -28,7 +33,7 @@ public:
     template< class body_type > const body_type& get_body() const;
 
 private:
-    char _buffer[256];
+    char _buffer[size];
 };
 
 #include "event.inl"
