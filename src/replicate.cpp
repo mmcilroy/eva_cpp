@@ -22,7 +22,7 @@ replicate_thread::replicate_thread( subscriber& s ) :
 
 void replicate_thread::run()
 {
-    tcp_session_ptr sess = _tcp.connect( "slave", 14003, tcp_callback_ptr( new replicate_callback ) );
+    tcp_session_ptr sess = _tcp.connect( "slave", 14002, tcp_callback_ptr( new replicate_callback ) );
     while( _run )
     {
         const event& e = _subscriber->next();
